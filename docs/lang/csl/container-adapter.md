@@ -2,7 +2,7 @@ author: Xeonacid, ksyx, Early0v0
 
 ## 栈
 
-STL [栈](../../ds/stack.md)(`std::stack`) 是一种后进先出 (Last In, First Out) 的容器适配器，仅支持查询或删除最后一个加入的元素（栈顶元素），不支持随机访问，且为了保证数据的严格有序性，不支持迭代器。
+STL [栈](../../ds/stack.md)(`std::stack`) 是一种后进先出 (Last In, First Out) 的容器适配器，仅支持查询或删除最后一个加入的元素（栈顶元素），不支持随机访问，且为了保证数据的严格有序性，不支持迭代器．
 
 ### 头文件
 
@@ -44,7 +44,7 @@ std::cout << s1.empty() << " " << s2.empty() << std::endl;  // 1 0
 
 ## 队列
 
-STL [队列](../../ds/queue.md)(`std::queue`) 是一种先进先出 (First In, First Out) 的容器适配器，仅支持查询或删除第一个加入的元素（队首元素），不支持随机访问，且为了保证数据的严格有序性，不支持迭代器。
+STL [队列](../../ds/queue.md)(`std::queue`) 是一种先进先出 (First In, First Out) 的容器适配器，仅支持查询或删除第一个加入的元素（队首元素），不支持随机访问，且为了保证数据的严格有序性，不支持迭代器．
 
 ### 头文件
 
@@ -58,7 +58,7 @@ STL [队列](../../ds/queue.md)(`std::queue`) 是一种先进先出 (First In, F
 std::queue<TypeName> q;  // 使用默认底层容器 deque，数据类型为 TypeName
 std::queue<TypeName, Container> q;  // 使用 Container 作为底层容器
 
-std::queue<TypeName> q2(q1);  // 将 s1 复制一份用于构造 q2
+std::queue<TypeName> q2(q1);  // 将 q1 复制一份用于构造 q2
 ```
 
 ### 成员函数
@@ -87,7 +87,7 @@ std::cout << q1.empty() << " " << q2.empty() << std::endl;  // 1 0
 
 ## 优先队列
 
-优先队列 `std::priority_queue` 是一种 [堆](../../ds/heap.md)，一般为 [二叉堆](../../ds/binary-heap.md)。
+优先队列 `std::priority_queue` 是一种 [堆](../../ds/heap.md)，一般为 [二叉堆](../../ds/binary-heap.md)．
 
 ### 头文件
 
