@@ -1,180 +1,236 @@
 author: PeterlitsZo, Tiphereth-A
 
+本文讨论费马小定理、欧拉定理及其扩展．这些定理解决了任意模数下任意大指数的幂的计算问题．
+
 ## 费马小定理
 
-### 定义
+**费马小定理**（Fermat's little theorem）是数论中最基础的定理之一．它也是 [Fermat 素性测试](./prime.md#fermat-素性测试) 的理论基础．
 
-若 $p$ 为素数，$\gcd(a, p) = 1$，则 $a^{p - 1} \equiv 1 \pmod{p}$。
+???+ note "费马小定理"
+    设 $p$ 是素数．对于任意整数 $a$ 且 $p\nmid a$，都成立 $a^{p-1}\equiv 1\pmod p$.
 
-另一个形式：对于任意整数 $a$，有 $a^p \equiv a \pmod{p}$。
+???+ note "定理"
+    设 $p$ 是素数．对于任意整数 $a$，都成立 $a^{p}\equiv a\pmod p$.
 
-### 证明
+这两个同余关系在 $p\nmid a$ 时是等价的；而在 $p\mid a$ 时，$a^p\equiv 0\equiv a\pmod p$ 平凡地成立．因此，这两个命题是等价的．这两个命题常常都称作费马小定理．
 
-设一个质数为 $p$，我们取一个不为 $p$ 倍数的数 $a$。
+??? note "证明一"
+    设 $p$ 是素数，且 $p\nmid a$．首先证明：对于 $i=1,2,\cdots,p-1$，余数 $ia \bmod p$ 各不相同．反证法．如果有 $1\le i < j < p$ 使得
+    
+    $$
+    ia \bmod p = ja \bmod p. \iff (j-i)a\equiv 0.\pmod p
+    $$
+    
+    但是，$(j-i)$ 和 $a$ 都不是 $p$ 的倍数，这显然矛盾．
+    
+    换句话说，这些余数是 $\{1,2,\cdots,p-1\}$ 的一个排列．因此，有
+    
+    $$
+    \prod_{i=1}^{p-1}i = \prod_{i=1}^{p-1}(ia\bmod p) \equiv \prod_{i=1}^{p-1}ia = a^{p-1}\prod_{i=1}^{p-1}i.\pmod p
+    $$
+    
+    这说明
+    
+    $$
+    (a^{p-1}-1)\prod_{i=1}^{p-1}i \equiv 0. \pmod{p}
+    $$
+    
+    也就是说，等式左侧是 $p$ 的倍数，但是 $i=1,2,\cdots, p-1$ 都不是 $p$ 的倍数，所以，只能有 $p\mid (a^{p-1}-1)$，亦即费马小定理成立．
 
-构造一个序列：$A=\{1,2,3\dots,p-1\}$，这个序列有着这样一个性质：
+??? note "证明二"
+    注意到费马小定理的第二种表述对于所有 $a\in\mathbf N$ 都成立，因此，可以考虑使用数学归纳法．负整数的情形容易转化为非负整数的情形．
+    
+    归纳起点为 $0^p\equiv 0\pmod p$，显然成立．假设它对于 $a\in\mathbf N$ 成立，需要证明的是，它对于 $a+1$ 也成立．由二项式定理可知
+    
+    $$
+    (a+1)^p=a^p+\binom{p}{1}a^{p-1}+\binom{p}{2}a^{p-2}+\cdots +\binom{p}{p-1}a+1.
+    $$
+    
+    除了首尾两项，组合数的表达式 $\dbinom{p}{k} = \dfrac{p!}{k!(p-k)!}$ 中，$p$ 都能整除分子，而不能整除分母，因此，这些系数对于 $k\neq 0,p$ 都是 $p$ 的倍数．因此，有
+    
+    $$
+    (a+1)^p \equiv a^p + 1\equiv a + 1. \pmod{p}
+    $$
+    
+    其中，第二步应用了归纳假设．因此，利用数学归纳法可知，费马小定理成立．
 
-$$
-\prod_{i=1}^{p-1}\space A_i\equiv\prod_{i=1}^{p-1} (A_i\times a) \pmod p
-$$
-
-证明：
-
-$$
-\because (A_i,p)=1,(A_i\times a,p)=1
-$$
-
-又因为每一个 $A_i\times a \pmod p$ 都是独一无二的，且 $A_i\times a \pmod p < p$
-
-得证（每一个 $A_i\times a$ 都对应了一个 $A_i$）
-
-设 $f=(p-1)!$, 则 $f\equiv a\times A_1\times a\times A_2\times a \times A_3 \dots \times  A_{p-1} \pmod p$
-
-$$
-\begin{aligned}
-a^{p-1}\times f &\equiv f \pmod p \\
-a^{p-1} &\equiv 1 \pmod p
-\end{aligned}
-$$
-
-证毕。
-
-也可用归纳法证明：
-
-显然 $1^p\equiv 1\pmod p$，假设 $a^p\equiv a\pmod p$ 成立，那么通过二项式定理有
-
-$$
-(a+1)^p=a^p+\binom{p}{1}a^{p-1}+\binom{p}{2}a^{p-2}+\cdots +\binom{p}{p-1}a+1
-$$
-
-因为 $\binom{p}{k}=\frac{p(p-1)\cdots (p-k+1)}{k!}$ 对于 $1\leq k\leq p-1$ 成立，在模 $p$ 意义下 $\binom{p}{1}\equiv \binom{p}{2}\equiv \cdots \equiv \binom{p}{p-1}\equiv 0\pmod p$，那么 $(a+1)^p \equiv a^p +1\pmod p$，将 $a^p\equiv a\pmod p$ 带入得 $(a+1)^p\equiv a+1\pmod p$ 得证。
+费马小定理的逆命题并不成立．即使对于所有与 $n$ 互素的 $a$，都有 $a^{n-1}\equiv 1\pmod n$，那么，$n$ 也未必是素数．相关讨论详见 [Fermat 素性测试](./prime.md#fermat-素性测试) 一节．
 
 ## 欧拉定理
 
-在了解欧拉定理（Euler's theorem）之前，请先了解 [欧拉函数](./euler-totient.md)。定理内容如下：
+**欧拉定理**（Euler's theorem）将费马小定理推广到了一般模数的情形，但仍然要求底数与指数互素．
 
-### 定义
+???+ note "欧拉定理"
+    对于整数 $m>0$ 和整数 $a$，且 $\gcd(a,m)=1$，有 $a^{\varphi(m)}\equiv 1\pmod{m}$，其中，$\varphi(\cdot)$ 为 [欧拉函数](./euler-totient.md)．
 
-若 $\gcd(a, m) = 1$，则 $a^{\varphi(m)} \equiv 1 \pmod{m}$。
+??? note "证明"
+    与费马小定理的证明一类似，仍然是取一个与 $m$ 互质的数列，再进行操作．考虑集合
+    
+    $$
+    R = \{r\in\mathbf N : 0 < r < m,~\gcd(r,m)=1\}.
+    $$
+    
+    这是模 $m$ 的 [既约剩余系](./basic.md#同余类与剩余系)．根据欧拉函数的定义可知，$|R|=\varphi(m)$．类似上文，将它们乘以 $a$ 相当于对该集合重新排列：
+    
+    $$
+    R = \{ar\bmod m: r\in R\}.
+    $$
+    
+    这是因为，容易验证 $\gcd(ar,m)=1$ 且不同的 $r_1,r_2\in R$ 对应的 $ar_1\bmod m$ 和 $ar_2\bmod m$ 也一定不同．因此，有
+    
+    $$
+    \prod_{r\in R}r \equiv \prod_{r\in R}ar = a^{\varphi(m)}\prod_{r\in R}r. \pmod{m}
+    $$
+    
+    再次重复之前的论证，消去 $\prod_{r\in R}r$，就得到 $a^{\varphi(m)}\equiv 1\pmod m$．
 
-### 证明
-
-实际上这个证明过程跟上文费马小定理的证明过程是非常相似的：**构造一个与 $m$ 互质的数列**，再进行操作。
-
-设 $r_1, r_2, \cdots, r_{\varphi(m)}$ 为模 $m$ 意义下的一个简化剩余系，则 $ar_1, ar_2, \cdots, ar_{\varphi(m)}$ 也为模 $m$ 意义下的一个简化剩余系。所以 $r_1r_2 \cdots r_{\varphi(m)} \equiv ar_1 \cdot ar_2 \cdots ar_{\varphi(m)} \equiv a^{\varphi(m)}r_1r_2 \cdots r_{\varphi(m)} \pmod{m}$，可约去 $r_1r_2 \cdots r_{\varphi(m)}$，即得 $a^{\varphi(m)} \equiv 1 \pmod{m}$。
-
-当 $m$ 为素数时，由于 $\varphi(m) = m - 1$，代入欧拉定理可立即得到费马小定理。
+对于素数 $p$，有 $\varphi(p)=p-1$，因此，费马小定理是欧拉定理的一个特例．另外，欧拉定理中的指数 $\varphi(m)$ 在一般情形下并非使得该式成立的最小指数．它可以改进到 $\lambda(m)$，其中，$\lambda(\cdot)$ 是 [Carmichael 函数](./primitive-root.md#carmichael-函数)．关于相关结论的代数背景，可以参考 [整数同余类的乘法群](../algebra/ring-theory.md#应用整数同余类的乘法群) 一节．
 
 ## 扩展欧拉定理
 
-### 定义
+扩展欧拉定理[^ex-euler]进一步将结论推广到了底数与指数不互素的情形．由此，它彻底解决了任意模数下任意底数的幂次计算问题，将它们转化为指数小于 $2\varphi(m)$ 的情形，从而可以通过 [快速幂](../binary-exponentiation.md) 在 $O(\log\varphi(m))$ 时间内计算．
 
-$$
-a^b \equiv \begin{cases}
-  a^{b \bmod \varphi(m)},                &\gcd(a,m) =  1,                   \\
-  a^b,                                   &\gcd(a,m)\ne 1, b <   \varphi(m), \\
-  a^{(b \bmod \varphi(m)) + \varphi(m)}, &\gcd(a,m)\ne 1, b \ge \varphi(m).
-\end{cases} \pmod m
-$$
+???+ note "扩展欧拉定理"
+    对于任意正整数 $m$、整数 $a$ 和非负整数 $k$，有
+    
+    $$
+    a^k \equiv \begin{cases}
+    a^{k \bmod \varphi(m)},                &\gcd(a,m) =  1,                   \\
+    a^k,                                   &\gcd(a,m)\ne 1, k <   \varphi(m), \\
+    a^{(k \bmod \varphi(m)) + \varphi(m)}, &\gcd(a,m)\ne 1, k \ge \varphi(m).
+    \end{cases} \pmod m
+    $$
 
-### 解释
+第二种情形是在说，如果 $k < \varphi(m)$，那么，就无需继续降幂，直接应用快速幂即可；而第三种和第一种情形的最大区别是，通过取余降幂之后，是否需要加上一项 $\varphi(m)$．当然，将第一种情形合并进入第二、三种情形也是正确的．
 
-读者可能对第二行产生疑问，这一行表达的意思是：如果 $b < \varphi(m)$ 的话，就不能降幂了。
+### 直观理解
 
-主要是因为题目中 $m$ 不会太大，而如果 $b < \varphi(m)$，自然复杂度是可以接受的。而如果 $b \ge \varphi(m)$ 的话，复杂度可能就超出预期了，这个时候我们才需要降幂来降低复杂度。
-
-### 证明
-
-#### 直观理解
+在严格证明定理之前，可以首先直观理解定理的含义．
 
 ![fermat1](./images/fermat.svg)
 
-需要知道的是，在 $\pmod m$ 的条件下，$a^b \bmod m$ 的取值范围一定在 $[0, m)$，而 $a^i \bmod m = (a^{i-1} \bmod m) \times a \bmod m$，那么对于任意一个数 $a$，那么很容易就能知道它的 **后继**，在有限的空间内这一定会形成一个循环。
+考虑余数 $a^k\bmod m$ 随着 $b$ 增大而变化的情况．由于余数的取值一定在区间 $[0,m)$ 内，而 $k$ 有无限多个．将 $a^k\bmod m \mapsto a^{k+1}\bmod m$ 看作这些余数结点之间的有向边．那么，一定可以构成如图所示的循环．
 
-在扩展欧拉定理中，循环分为纯循环和混循环。其中纯循环中不存在节点有两个前驱，而混循环则反之。而 $a^i \mod n$ 形成的序列可以是一个混循环，那么只需要知道循环节的长度，和前面那一小段未进入循环节的长度，就可以根据这个性质来进行降幂了。
+扩展欧拉定理说明，这些循环可能是纯循环（第一种情形）或者混循环（第二、三种情形）．纯循环中，没有结点存在两个前驱，而混循环中就会出现这样的情形．因此，对于一般的情况，只需要能够求出循环节的长度和进入循环节之前的长度，就可以利用这个性质进行降幂．
 
-值得注意的是，无论是费马小定理，还是（扩展）欧拉定理，一个很重要的应用就是降幂，从而将不可能的表达式化为可能。
+### 严格证明
 
-#### 形式证明
+本节给出扩展欧拉定理的严格证明．
 
-证明转载自 [synapse7](http://blog.csdn.net/synapse7/article/details/19610361)，并进行了一些整理。
+??? note "证明"
+    首先说明，存在 $k_0\in\mathbf N$，使得整数 $a$ 和 $m':=\dfrac{m}{\gcd(a^{k_0},m)}$ 互素．为此，设 $\nu_p(n)$ 是整数 $n$ 的质因数分解中素数 $p$ 的幂次，那么，不妨取
+    
+    $$
+    k_0 = \max\left\{\left\lceil\dfrac{\nu_p(m)}{\nu_p(a)}\right\rceil : \nu_p(a)>0\right\}.
+    $$
+    
+    因为 $m$ 中所有和 $a$ 的公共素因子的幂次都已经包含在 $a^{k_0}$ 中，所以，$a$ 就与 $m$ 中剩下的因子 $m'=\dfrac{m}{\gcd(a^{k_0},m)}$ 互素．
+    
+    进而，对 $k\ge k_0$ 考察同余关系
+    
+    $$
+    b\equiv a^k. \pmod m
+    $$
+    
+    由于 $\gcd(a^{k_0},m)=\gcd(a^k,m)\mid b$，所以，将等式两侧（包括模数）同时除以 $\gcd(a^{k_0},m)$，就有
+    
+    $$
+    \dfrac{b}{\gcd(a^{k_0},m)} = \dfrac{a^{k_0}}{\gcd(a^{k_0},m)}\cdot a^{k-k_0}. \pmod{m'}
+    $$
+    
+    此时，因为 $a$ 与模数 $m'$ 互素，可以直接应用欧拉定理，得到
+    
+    $$
+    \dfrac{b}{\gcd(a^{k_0},m)} \equiv \dfrac{a^{k_0}}{\gcd(a^{k_0},m)}\cdot a^{(k-k_0)\bmod\varphi(m')}. \pmod{m'}
+    $$
+    
+    因此，再将因子 $\gcd(a^{k_0},m)$ 乘回去，就得到
+    
+    $$
+    b \equiv a^{k_0}\cdot a^{(k-k_0)\bmod\varphi(m')} = a^{k_0 + (k-k_0)\bmod\varphi(m')}. \pmod{m}
+    $$
+    
+    这就得到了扩展欧拉定理的形式．式子说明，循环节的长度是 $\varphi(m')$，而进入循环节之前的长度为 $k_0$．
+    
+    此处得到的参数比扩展欧拉定理中的更紧，但是相对来说，这些参数的计算并不容易．可以说明，这些参数可以放宽到扩展欧拉定理中的情形．首先，利用 [欧拉函数的表达式](./euler-totient.md) 可知，因为 $m'\mid m$，所以 $\varphi(m')\mid\varphi(m)$．也就是说，$\varphi(m)$ 也是它的循环节．其次，$k_0$ 也可以放宽到 $\varphi(m)$．这是因为对于所有 $m\in\mathbf N_+$ 和任意 $p\mid m$，都有
+    
+    $$
+    \begin{aligned}
+    \varphi(m) &\ge \varphi(p^{\nu_p(m)}) = (p-1)p^{\nu_p(m)-1} \ge p^{\nu_p(m)-1} \\
+    &= (1+(p-1))^{\nu_p(m)-1} \ge 1 + (p-1)(\nu_p(m)-1) \\
+    &\ge 1 + (\nu_p(m)-1) = \nu_p(m).
+    \end{aligned}
+    $$
+    
+    其中，第二行的不等式利用了二项式展开，并只保留常数项和一次项．因此，有
+    
+    $$
+    k_0 \le \max\{\nu_p(m):p\in\mathbf P\}\le \varphi(m).
+    $$
+    
+    这就完全证明了所述结论．
 
-1.  **命题**：$a$ 的从 $0$ 次，$1$ 次到 $b$ 次幂模 $m$ 构成的序列中，存在 $r$ 和 $s$，使得前 $r$ 个数（即从 $a^0 \bmod m$ 到 $a^{r-1} \bmod m$）互不相同，从第 $r$ 个数开始，每 $s$ 个数就循环一次。
+## 例题
 
-    **证明**：
+本节通过一道例题展示扩展欧拉定理的一个经典应用——计算任意模数下的幂塔．**幂塔**（power tower）指形如 $A\uparrow(B\uparrow(C\uparrow(D\uparrow\cdots)))$ 的式子，其中，$\uparrow$ 是 Knuth 箭头记号，而 $A,B,C,D,\cdots$ 是一系列非负整数．
 
-    -   由鸽巢定理易证。
+???+ example "[Library Checker - Tetration Mod](https://judge.yosupo.jp/problem/tetration_mod)"
+    $T$ 组测试．每组测试中，给定 $A,B,M$，求 $(A\uparrow\uparrow B)\bmod M$．其中，$A\uparrow\uparrow B$ 表示由 $B$ 个 $A$ 组成的幂塔．或者，形式化地，定义
+    
+    $$
+    A \uparrow\uparrow B =
+    \begin{cases}
+    1 , & B = 0,\\
+    A\uparrow(A\uparrow\uparrow(B-1)), & B > 0.
+    \end{cases}
+    $$
+    
+    规定 $0^0=1$．
 
-        我们把 $r$ 称为 $a$ 幂次模 $m$ 的循环起始点，$s$ 称为循环长度。（注意：$r$ 可以为 $0$）
+??? note "解答"
+    利用 $A\uparrow\uparrow B$ 的定义，递归计算即可．要计算 $(A\uparrow\uparrow B)\bmod M$，只需要应用扩展欧拉定理，计算 $(A\uparrow\uparrow(B-1))\bmod\varphi(M)$．由于 $\varphi(\varphi(n)) \le n/2$ 对所有 $n\ge 2$ 都成立，所以，递归过程一定在 $O(\log M)$ 步内完成．由于需要应用扩展欧拉定理，所以需要区分当前的计算结果是否严格小于当前模数．为此，只需要在取余的时候多判断一步即可．另外，需要注意边界情况的处理．
 
-        用公式表述为：$\forall i \ge r, a^i \equiv a^{i+s} \pmod{m}$
+??? note "参考代码"
+    ```cpp
+    --8<-- "docs/math/code/fermat/tetration.cpp"
+    ```
 
-2.  **命题**：$a$ 为素数的情况，该式成立。
-
-    **证明**：
-
-    -   **若模 $m$ 不能被 $a$ 整除**，而因为 $a$ 是一个素数，那么 $\gcd(a, m) = 1$ 成立，根据欧拉定理，容易证明该式成立。
-
-    -   **若模 $m$ 能被 $a$ 整除**，那么存在 $r$ 和 $m'$ 使得 $m = a^r m'$，且 $\gcd(a, m')=1$ 成立。所以根据欧拉定理有 $a^{\varphi(m')} \equiv 1 \pmod{m'}$。
-
-        又由于 $\gcd(a^r, m')=1$，所以根据欧拉函数的求值规则，容易得到：$\varphi(m) = \varphi(m') \times (a-1)a^{r-1}$，即我们有：$\varphi(m') \mid \varphi(m)$。
-
-        所以 $a^{\varphi(m')} \equiv 1 \pmod {m'}, \varphi(m') \mid \varphi(m) \implies a^{\varphi(m)} \equiv 1 \pmod {m'}$，即 $a^{\varphi(m)}=km'+1$，两边同时乘以 $a^r$，得 $a^{r+\varphi(m)} = km + a^r$（因为 $m = a^r m'$）
-
-        所以对于 $m$ 中素因子 $a$ 的次数 $r$ 满足：$a^r \equiv a^{r+\varphi(m)} \pmod m$。我们可以简单变换形式，得到 **推论**：
-
-        $$
-        b > r \implies a^b \equiv a^{r + ((b-r) \bmod \varphi(m))} \pmod {m}
-        $$
-
-        又由于 $m = a^r m'$，所以 $\varphi(m) = \varphi(a^r) \varphi(m') \ge \varphi(a^r)=a^{r-1}(a-1) \ge r$（tips：$a$ 是素数，最小是 $2$，而 $r \ge 1$）。
-
-        所以因为 $\varphi(m) \ge r$，故有：
-
-        $$
-        a^r \equiv a^{r+\varphi(m)} \equiv a^{r \bmod \varphi(m)+\varphi(m)} \pmod m
-        $$
-
-        所以
-
-        $$
-        \begin{aligned}
-            a^b &\equiv a^{r+(b-r) \bmod \varphi(m)} \\
-                &\equiv a^{r \bmod \varphi(m) + \varphi(m) + (b-r) \bmod \varphi(m)} \\
-                &\equiv a^{\varphi(m) + b \bmod \varphi(m)}
-        \end{aligned} \pmod m
-        $$
-
-        即 $a^b\equiv a^{b \bmod \varphi(m)+\varphi(m)}\pmod m$。
-
-3.  **命题**：$a$ 为素数的幂的情况，该式成立。
-
-    **证明**：
-
-    -   不妨令 $a = p^k$，是否依然有 $\forall r, a^{r} \equiv a^{r+\varphi(m)} \pmod m$？
-
-        答案是肯定的，由命题 1 可知存在 $s$ 使得 $a^s\equiv 1 \pmod m$，所以 $p^{\mathrm{lcm}(s,k)} \equiv 1 \pmod {m}$，所以令 $s'=\frac{s}{\gcd(s,k)}$ 时，我们能有 $p^{s'k} \equiv 1 \pmod {m}$。
-
-        此时有关系：$s' \mid s$ 且 $s \mid \varphi(m)$，且 $r'= \lceil \frac{r}{k}\rceil \le r \le \varphi(m)$，由 $r',s'$ 与 $\varphi(m)$ 的关系，依然可以得到 $a^b\equiv a^{b \bmod \varphi(m)+\varphi(m)}\pmod m$。
-
-4.  **命题**：$a$ 为合数的情况，该式成立。
-
-    **证明**：
-
-    -   只证 $a$ 拆成两个素数的幂的情况，大于两个的用数学归纳法可证。
-
-        设 $a=a_1a_2$，其中 $a_i=p_i^{k_i}$，而 $a_i$ 的循环长度为 $s_i$；
-
-        则 $s \mid \operatorname{lcm}(s_1,s_2)$，由于 $s_1 \mid \varphi(m),s_2 \mid \varphi(m)$，那么 $\operatorname{lcm}(s_1,s_2) \mid \varphi(m)$，所以 $s \mid \varphi(m)$，$r=\max(\lceil \frac{r_i}{k_i} \rceil) \le \max(r_i) \le \varphi(m)$；
-
-        由 $r,s$ 与 $\varphi(m)$ 的关系，依然可以得到 $a^b \equiv a^{b \bmod \varphi(m)+\varphi(m)}\pmod m$。
-
-        证毕。
+??? warning "取模技巧正确性证明"
+    本实现利用
+    
+    $$
+    r_m(v) = \begin{cases} v\bmod m, &\text{if }v < m, \\ v \bmod m + m, &\text{if }v \ge m\end{cases}
+    $$
+    
+    代替取模，相当于同时记录了余数信息 $v\bmod m$ 和越界信息 $v \ge m$．扩展欧拉定理只能说明，当指数的余数信息和越界信息都正确时，取幂能够得到正确的余数信息；但是，越界信息的正确性无法保证．例如，在计算 $r_6(2^4)$ 时，指数需要对 $\varphi(6)=2$ 取模，而 $r_2(4)=2$（即余数为 $0$ 且越界），进行取幂后将得到 $r_6(2^2) = 4$；与正确答案 $r_6(2^4) = 10$ 相比，模 $6$ 的余数正确，但是越界信息丢失．但可以证明，尽管越界信息可能丢失，余数信息却总是正确的．因此，基于这一取模技巧的取幂算法也总是正确的．
+    
+    考虑算法的迭代过程．假设从最内层开始向外层函数回溯，第一次越界信息错误发生在计算 $r_m(a^k)$ 时．$k<\varphi(m)$ 时指数精确，不会出错，故设 $k\ge\varphi(m)$；此时 $k\ge k\bmod\varphi(m)+\varphi(m)$，即取模只会低估指数，越界信息不会凭空产生，出错的唯一可能是本应记录越界而实际未记录，即
+    
+    $$
+    a^{k\bmod\varphi(m)+\varphi(m)} < m \le a^{k}.
+    $$
+    
+    该不等式只能在 $a \ge 2$ 时成立，所以左侧表达式不小于 $2^{\varphi(m)}$．但是，$2^{\varphi(m)} < m$ 只会发生在 $m = 6$ 时．[^phi-ineq]代入上式，就得到 $a^{k\bmod 2 + 2} < 6 \le a^{k}$．左侧表达式中，若 $k$ 是偶数，则指数是 $2$，有 $a = 2$ 且 $k \ge 4$；若 $k$ 是奇数，则指数是 $3$，无解．综上，丢失越界信息只发生在 $m=6,~a=2$ 且 $k\ge 4$ 是偶数时．
+    
+    下面说明，这一情形下丢失越界信息并不影响后续计算．只考虑 $a_i\ge 2$ 的非平凡情形（$a_i\le 1$ 时幂值不超过 $1$，不会越界）．内层模数为 $6$，故回溯一层后的模数 $m_1$ 满足 $\varphi(m_1)=6$，只能是 $7,9,14,18$ 之一．回溯到该层时，需要计算 $r_{m_1}(a_1^{k_1})$，而 $k_1$ 本应为 $10$，实际为 $4$．但对所有 $a_1$ 和这些 $m_1$，都有 $a_1^{4}\equiv a_1^{10}\pmod {m_1}$．为说明这一点，注意到前文扩展欧拉定理的 [证明](#严格证明) 中已经得到：对任何 $a$ 和 $m$，幂次余数 $a^k\bmod m$ 进入循环节之前的长度 $k_0$ 都不超过 $\nu_+(m):=\max\{\nu_p(m) : p\mid m\}$，且循环节长度整除 $\varphi(m)$．而 $\nu_+(m_1)\le 2$，故 $k_1=4$ 已进入循环节，且它与 $10$ 相差 $\varphi(m_1)=6$，亦即上式总成立．所以余数信息正确．再看越界信息．由于内层真实值为 $2^k\ge 16>10$，故 $a_1^{2^k}\ge a_1^{10}\ge m_1$，本层总应该标记越界．但本层只会返回 $a_1^4$ 是否越界；唯一出错的可能是 $a_1^4<m_1$，即只能有 $a_1=2,~m_1=18$．其余情形的越界信息已正确标记，继续回溯自然正确．而 $a_1=2,~m_1=18$ 时，本应返回 $34$，实际返回 $16$，需再回溯一层，此时 $m_2$ 只能是 $19,27,38,54$ 之一．此时总有 $\nu_+(m_2)\le 3 < 16$ 且 $34-16=\varphi(m_2)$，余数信息正确；且 $a_2^{16}\ge m_2$ 恒成立，越界信息也正确．所以此时结果正确，后续回溯也必然正确．
+    
+    由于各层模数严格递减，$m=6$ 至多出现一次．综上，利用该取模技巧计算多层幂次时，每一层的余数信息都是正确的，至多只有两层的越界信息是错误的．注意，证明中没有假定各层取幂的底数相同，故结论对不同底数的情形也成立．
 
 ## 习题
 
-1.  [SPOJ #4141 "Euler Totient Function"\[Difficulty: CakeWalk\]](http://www.spoj.com/problems/ETF/)
-2.  [UVa #10179 "Irreducible Basic Fractions"\[Difficulty: Easy\]](http://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=1120)
-3.  [UVa #10299 "Relatives"\[Difficulty: Easy\]](http://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=1240)
-4.  [UVa #11327 "Enumerating Rational Numbers"\[Difficulty: Medium\]](http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2302)
-5.  [TIMUS #1673 "Admission to Exam"\[Difficulty: High\]](http://acm.timus.ru/problem.aspx?space=1&num=1673)
+-   [Luogu P5091【模板】扩展欧拉定理](https://www.luogu.com.cn/problem/P5091)
+-   [Codeforces 906 D. Power Tower](https://codeforces.com/problemset/problem/906/D)
+-   [Luogu P3747 \[六省联考 2017\] 相逢是问候](https://www.luogu.com.cn/problem/P3747)
+-   [Luogu P4139 上帝与集合的正确用法](https://www.luogu.com.cn/problem/P4139)
+-   [Luogu P3934 \[Ynoi Easy Round 2016\] 炸脖龙 I](https://www.luogu.com.cn/problem/P3934)
+-   [Luogu P6736「Wdsr-2」白泽教育](https://www.luogu.com.cn/problem/P6736)
+
+## 参考资料与注释
+
+-   [Fermat's little theorem - Wikipedia](https://en.wikipedia.org/wiki/Fermat%27s_little_theorem)
+-   [Euler's theorem - Wikipedia](https://en.wikipedia.org/wiki/Euler%27s_theorem)
+-   Hardy, Godfrey Harold, and Edward Maitland Wright. An introduction to the theory of numbers. Oxford university press, 1979.
+
+[^ex-euler]: 这一名字主要出现在算法竞赛圈中，而并非该结论的通用名称．
+
+[^phi-ineq]: 根据 Kendall, R. and Osborn, R. (1965) Two Simple Lower Bounds for the Euler ϕ-Function. Texas Journal of Science, 17, 324-326 一文，对于 $m > 6$ 总有 $\varphi(m)\ge\sqrt{m}$．直接计算可知，对于 $m\ge 16$，总有 $\sqrt{m}\ge\log_2m$．因此，不等式 $\varphi(m)\ge\log_2m$ 对 $m\ge 16$ 都成立．其余可逐一验证．
