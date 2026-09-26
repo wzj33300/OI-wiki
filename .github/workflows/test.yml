@@ -16,42 +16,46 @@ jobs:
       any_changed: ${{ steps.changed-files.outputs.any_changed }}
       files_to_test: ${{ steps.GetFiles.outputs.files_to_test }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Get changed code files
         id: changed-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v47
         with:
           files: |
             docs/**/*.cpp
             docs/**/*.in
             docs/**/*.ans
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           python-version: '3.10'
-          cache: pipenv
+      - name: Install uv
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          version: "latest"
       - name: Install Python dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          pip install pipenv
-          pipenv install
+        run: uv sync
       - name: Install C++
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: sudo apt-get install -y g++
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
       - name: Get Files to Test
         if: steps.changed-files.outputs.any_changed == 'true'
         id: GetFiles
-        run: pipenv run python scripts/get_files_to_test.py
+        run: uv run python scripts/get_files_to_test.py
       - name: Correctness Check
         if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ steps.GetFiles.outputs.files_to_test }}
-        run: pipenv run python scripts/correctness_check.py
+        run: uv run python scripts/correctness_check.py
 
   undefinedbehaviors-ubuntu:
     name: UB Check - x86_64 Ubuntu
@@ -62,15 +66,18 @@ jobs:
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install g++-9
-        run: apt-get install -y g++-9
+        run: |
+          apt-get update
+          apt-get install -y g++-9
       - name: Undefined Behaviors Check
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: x86_64 Ubuntu
+          PYTHONIOENCODING: UTF-8
         run: python3 scripts/ub-check.py
 
   undefinedbehaviors-macos:
@@ -81,7 +88,7 @@ jobs:
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check Compiler Version
@@ -96,6 +103,7 @@ jobs:
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: arm64 MacOS
+          PYTHONIOENCODING: UTF-8
         run: python3 scripts/ub-check.py
 
   undefinedbehaviors-rv:
@@ -106,7 +114,7 @@ jobs:
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Launch Risc-V Docker
@@ -119,6 +127,7 @@ jobs:
             --workdir $PWD \
             --env FILES_TO_TEST="${{ needs.correctness.outputs.files_to_test }}" \
             --env RUNS_ON="riscv64 Ubuntu" \
+            --env PYTHONIOENCODING="UTF-8" \
             --env GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY \
             ghcr.io/trickeye/ubtest:latest sleep infinity
           docker exec ubtest uname -a
@@ -141,14 +150,15 @@ jobs:
     name: UB Check - x86_64 Windows
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
-    runs-on: windows-2022
+    runs-on: windows-2025
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check Compiler Version
+        id: check-compiler-version
         shell: cmd
         run: |
           echo ::group::Install Clang, MinGW
@@ -161,14 +171,27 @@ jobs:
           g++ --version
           echo ::endgroup::
           echo ::group::Check MSVC Version
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          REM Use vswhere to find the latest VS installation that includes VC tools
+          REM See https://github.com/microsoft/vswhere/wiki/Find-VC#batch for details
+          for /f "usebackq delims=" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSINSTALL=%%i"
+          if not defined VSINSTALL (
+            echo No Visual Studio with VC tools found via vswhere.
+            exit /b 1
+          )
+          echo Found VS at %VSINSTALL%
+          >> "%GITHUB_OUTPUT%" echo VSINSTALL=%VSINSTALL%
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars64.bat"
           cl.exe
           echo ::endgroup::
       - name: Undefined Behaviors Check
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: x86_64 Windows
-        run: python scripts/ub-check.py
+          PYTHONIOENCODING: UTF-8
+          VSINSTALL: ${{ steps.check-compiler-version.outputs.VSINSTALL }}
+        run: |
+          chcp 65001
+          python scripts/ub-check.py
 
 
   undefinedbehaviors-alpine:
@@ -180,7 +203,7 @@ jobs:
       output: ${{ steps.set-output.outputs.output }}
     container: alpine:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check Compiler Version
@@ -198,4 +221,5 @@ jobs:
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: x86_64 Alpine
+          PYTHONIOENCODING: UTF-8
         run: python3 scripts/ub-check.py
