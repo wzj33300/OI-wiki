@@ -1,10 +1,10 @@
-伯努利数 $B_n$ 是一个与数论有密切关联的有理数序列。前几项被发现的伯努利数分别为：
+伯努利数 $B_n$ 是一个与数论有密切关联的有理数序列．前几项被发现的伯努利数分别为：
 
 $B_0=1,B_1=-\frac{1}{2},B_2=\frac{1}{6},B_3=0,B_4=-\frac{1}{30},\dots$
 
 ## 等幂求和
 
-伯努利数是由雅各布·伯努利的名字命名的，他在研究 $m$ 次幂和的公式时发现了奇妙的关系。我们记
+伯努利数是由雅各布·伯努利的名字命名的，他在研究 $m$ 次幂和的公式时发现了奇妙的关系．我们记
 
 $$
 S_{m}(n)=\sum_{k=0}^{n-1}k^m=0^m+1^m+\dots+(n-1)^m
@@ -22,9 +22,9 @@ S_4(n)&=\frac{1}{5}n^5-\frac{1}{2}n^4+\frac{1}{3}n^3-\frac{1}{30}n
 \end{aligned}
 $$
 
-可以发现，在 $S_m(n)$ 中 $n^{m+1}$ 的系数总是 $\frac{1}{m+1}$，$n^m$ 的系数总是 $-\frac{1}{2}$，$n^{m-1}$ 的系数总是 $\frac{m}{12}$，$n^{m-3}$ 的系数是 $-\frac{m(m-1)(m-2)}{720}$，$n^{m-4}$ 的系数总是零等。
+可以发现，在 $S_m(n)$ 中 $n^{m+1}$ 的系数总是 $\frac{1}{m+1}$，$n^m$ 的系数总是 $-\frac{1}{2}$，$n^{m-1}$ 的系数总是 $\frac{m}{12}$，$n^{m-3}$ 的系数是 $-\frac{m(m-1)(m-2)}{720}$，$n^{m-4}$ 的系数总是零等．
 
-而 $n^{m-k}$ 的系数总是某个常数乘以 $m^{\underline{k}}$，$m^{\underline{k}}$ 表示下降阶乘幂，即 $\frac{m!}{(m-k)!}$。
+而 $n^{m-k}$ 的系数总是某个常数乘以 $m^{\underline{k}}$，$m^{\underline{k}}$ 表示下降阶乘幂，即 $\frac{m!}{(m-k)!}$．
 
 ## 递推公式
 
@@ -54,7 +54,7 @@ $$
 
 #### 利用归纳法证明
 
-这个证明方法来自 Concrete Mathematics 6.5 BERNOULLI NUMBER。
+这个证明方法来自 Concrete Mathematics 6.5 BERNOULLI NUMBER．
 
 运用二项式系数的恒等变换和归纳法进行证明：
 
@@ -66,7 +66,7 @@ S_{m+1}(n)+n^{m+1}&= \sum_{k=0}^{n-1}(k+1)^{m+1}\\
 \end{aligned}
 $$
 
-令 $\hat{S}_{m}(n)=\frac{1}{m+1} \sum_{k=0}^{m} \binom{m+1}{k}B_kn^{m+1-k}$，我们希望证明 $S_m(n)=\hat{S}_m(n)$，假设对 $j\in[0,m)$，有 $S_j(n)=\hat{S}_j(n)$。
+令 $\hat{S}_{m}(n)=\frac{1}{m+1} \sum_{k=0}^{m} \binom{m+1}{k}B_kn^{m+1-k}$，我们希望证明 $S_m(n)=\hat{S}_m(n)$，假设对 $j\in[0,m)$，有 $S_j(n)=\hat{S}_j(n)$．
 
 将原式中两边都减去 $S_{m+1}(n)$ 后可以得到：
 
@@ -113,7 +113,7 @@ $$
 对 $\binom{m+1}{j}\binom{j}{k}$ 进行恒等变换：
 
 $$
-\binom{m+1}{j}\binom{j}{k}＝\binom{m+1}{k}\binom{m-k+1}{j-k}
+\binom{m+1}{j}\binom{j}{k}=\binom{m+1}{k}\binom{m-k+1}{j-k}
 $$
 
 那么式子就变成了：
@@ -146,13 +146,12 @@ $$
 $$
 \begin{aligned}
 n^{m+1}&=\sum_{k=0}^{m}\frac{n^{k+1}}{k+1}\binom{m+1}{k}[m - k = 0]+(m+1)\Delta\\
-&=\sum_{k=0}^{m}\frac{n^{k+1}}{k+1}\binom{m+1}{k}+(m+1)\Delta\\
 &=\frac{n^{m+1}}{m+1}\binom{m+1}{m}+(m+1)\Delta\\
 &=n^{m+1}+(m+1)\Delta
 \end{aligned}
 $$
 
-于是 $\Delta=0$，且有 $S_m(n)=\hat{S}_m(n)$。
+于是 $\Delta=0$，且有 $S_m(n)=\hat{S}_m(n)$．
 
 #### 利用指数生成函数证明
 
@@ -202,8 +201,8 @@ $$
 $$
 \begin{aligned}
 F_n(z) &= B(z)\cdot\dfrac{\mathrm{e}^{nz} - 1}{z}\\
-&= \left(\sum_{i\ge 0}\dfrac{B_i}{i!} \right)\left(\sum_{i\ge 1}\dfrac{n^i z^{i - 1}}{i!}\right)\\
-&= \left(\sum_{i\ge 0}\dfrac{B_i}{i!} \right)\left(\sum_{i\ge 0}\dfrac{n^{i+1} z^{i}}{(i+1)!}\right)
+&= \left(\sum_{i\ge 0}\dfrac{B_i}{i!}z^i \right)\left(\sum_{i\ge 1}\dfrac{n^i z^{i - 1}}{i!}\right)\\
+&= \left(\sum_{i\ge 0}\dfrac{B_i}{i!}z^i \right)\left(\sum_{i\ge 0}\dfrac{n^{i+1} z^{i}}{(i+1)!}\right)
 \end{aligned}
 $$
 
@@ -211,16 +210,16 @@ $$
 
 $$
 \begin{aligned}
-S \times m(n)&=m![z^m]F_n(z)\\
-             &= m!\sum_{i=0}^{m}\dfrac{B \times i}{i!}\cdot\dfrac{n^{m-i+1}}{(m-i+1)!}\\
+S_m(n)&=m![z^m]F_n(z)\\
+             &= m!\sum_{i=0}^{m}\dfrac{B_i}{i!}\cdot\dfrac{n^{m-i+1}}{(m-i+1)!}\\
              &=\dfrac{1}{m+1}\sum_{i=0}^{m}\binom{m+1}{i}B_in^{m-i+1}
 \end{aligned}
 $$
 
-故得证。
+故得证．
 
 ??? note "参考实现"
-    ```c++
+    ```cpp
     using ll = long long;
     constexpr int MAXN = 10000;
     constexpr int mod = 1e9 + 7;
